@@ -22,7 +22,14 @@ TOKEN = os.getenv("TOKEN_DAN")
 admin_ids_str = os.getenv("ADMIN_IDS").split(',')
 ADMIN_IDS = [int(i) for i in admin_ids_str]
 
+# Pythonanywhere free version
+# from aiogram.client.session.aiohttp import AiohttpSession
+# session = AiohttpSession(proxy="http://proxy.server:3128")
+# bot = Bot(TOKEN, session=session, parse_mode=ParseMode.HTML)
+
+# comment this if youse Pythonanywhere free version
 bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
+
 dp = Dispatcher()
 
 
@@ -254,12 +261,12 @@ async def command_answer_customer(
 @dp.message(Form.replying_customer)
 @is_user_or_admin()
 async def replying_customer(
-        message: Message,
+        query: CallbackQuery,
         state: FSMContext,
 ) -> None:
-    reply_message = message.text
+    reply_message = query.message.text
     customer_id = (await state.get_data()).get("replying_customer")
-    await message.answer(
+    await query.message.answer(
         f'Ваш ответ был отправлен: {customer_id}\n'
         f'{reply_message}'
     )

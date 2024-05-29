@@ -36,17 +36,21 @@ def is_user_or_admin():
                 # Check if the first argument is Message or CallbackQuery
                 if isinstance(args[0], (Message, CallbackQuery)):
                     message_or_query = args[0]
-                    user_id = message_or_query.from_user.id
-                    if isinstance(message_or_query, CallbackQuery):
+                    # user_id = message_or_query.from_user.id
+                    # if isinstance(message_or_query, CallbackQuery):
+                    #     user_id = message_or_query.message.chat.id
+                    try:
                         user_id = message_or_query.message.chat.id
+                    except AttributeError:
+                        user_id = message_or_query.from_user.id
 
                     users_db = UsersDatabase()
                     users_ids = [user_id[0] for user_id in users_db.show_all_users()]
                     users_db.close()
 
-                    # ic(user_id)
-                    # ic(users_ids)
-                    # ic(ADMIN_IDS)
+                    ic(user_id)
+                    ic(users_ids)
+                    ic(ADMIN_IDS)
 
                     if user_id not in users_ids and user_id not in ADMIN_IDS:
                         if isinstance(message_or_query, Message):
